@@ -2,7 +2,12 @@
 \usetheme{Boadilla}
 \setbeamertemplate{blocks}[rounded][shadow=true]
 \usepackage{listings}
-
+\lstset{language=C++,
+           basicstyle=\ttfamily,
+           keywordstyle=\color{blue}\ttfamily,
+           stringstyle=\color{red}\ttfamily,
+           commentstyle=\color{green}\ttfamily
+          }
 
 %Footlines 
 \useoutertheme{infolines}
@@ -90,12 +95,29 @@ Specifications
 %
 
 \begin{frame}{Design}
+\begin{tiny}
 \lstinputlisting{inode.h}
+\end{tiny}
+
 The pointers to the disk block is saved in an array i\_zone each referencing a 32 bit address in the disk.This array can be used to store data when file size is lesser than 32 Bytes. 
 \end{frame}
 
+%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+%
+
+\begin{frame}{Design}
+Differentiating between an immediate and regular file. \linebreak
+\begin{small}
+Add an additional option flag in { \em i\_mode } which is element of i\_node structure in { \em const.h} file. 
+\end{small}
+\begin{tiny}
+\lstinputlisting{imode.h}
+\end{tiny}
 
 
+
+
+\end{frame}
 
 
 
