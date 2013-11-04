@@ -13,11 +13,12 @@ The pointers to the disk block is saved in an array i\_zone each referencing a 3
 
 Minix file system uses the flag bits in the {\em const.h} header file for { \em i\_mode} variable of inode structure, so now we have to add flag bits to check for immediate files.
 
-\section{Creating an immediate file}
+\section{Operations on an immediate file}
+\subsection{Create}
 Create a immediate file only when the flag bit for immediate file is set. This flag must be passed to creat/open system call.
-\section{Reading an immediate file}
+\subsection{Read}
 Instead of reading the data from the disk block the read system call should be modified to read data from the inode itself.
-\section{Writing to an immediate file}
-Instead of writing the data from the disk block the read system call should be modified to read data from the inode itself and the system call should report an error whenever the file size goes beyond 32 Bytes.
-\section{Deleting an immediate file}
+\subsection{Write}
+The write system call should be modified to write data into the inode itself and should report an error whenever the file size goes beyond 32 Bytes.
+\subsection{Delete}
 When files are deleted typically indirect disk blocks need to be freed skip this step in case of immediate file and delete the inode.
