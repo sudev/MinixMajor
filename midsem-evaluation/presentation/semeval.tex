@@ -33,15 +33,6 @@
   \titlepage
 \end{frame}
 
-%Slide 1 -  Problem Statement 
-%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-\begin{frame}{Problem Statement}
-\large \begin{center}
-Implementation of immediate files in MINIX 3 filesystem.\linebreak \linebreak
-Files smaller than 32 Bytes are accommodated in the inode
-\end{center} 
-\end{frame}
-
 %slide Work Done
 %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 \begin{frame}{Work Done}
@@ -58,7 +49,18 @@ The system call exec was edited in {\em do\_exec.c}, the name of the process was
 \end{itemize}
 \end{frame}
 
-%Design 
+%Slide 1 -  Problem Statement 
+%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+\begin{frame}{Problem Statement}
+\large \begin{center}
+Implementation of immediate files in MINIX 3 filesystem.\linebreak \linebreak
+Files smaller than 32 Bytes are accommodated in the inode
+\end{center} 
+\end{frame}
+
+
+
+%Design  what is immediate files
 %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 \begin{frame}{Design}
 \begin{Huge}
@@ -68,6 +70,30 @@ Immediate files
 \linebreak
 An immediate file is a file whose data is not stored in a data block, but directly inside the inode.
 \end{frame}
+
+% why ?
+%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+\begin{frame}{Design}
+\begin{Huge}
+Why use immediate files ? \linebreak
+\end{Huge}
+\begin{itemize}
+\item Reduces the number of disk access.
+\item Very less internal fragmentation.
+\item A study shows that average file size in unix is about 1KB(Mullender and Tanenbaum 1984).
+\item The concept been used in NTFS to accomodate smaller files in its MFT(Master file table) itself.
+\end{itemize}
+
+%\begin{large}
+%{Who is using immediate file ?} \linebreak \linebreak
+%\end{large}
+%\hspace{1000mm} \begin{small}
+% NTFS stores small files within MFT (Master file table)
+%\end{small}
+
+\end{frame}
+
+
 
 %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 %Specification
