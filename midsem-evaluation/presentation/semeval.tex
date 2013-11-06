@@ -17,7 +17,7 @@
 %Titile Page 
 \title[Experiment with MINIX 3 OS]{Experiment with MINIX 3 OS}
 \subtitle[Filesystem]{Implementing immediate files in MINIX filesystem}
-\author[Sudev A C, Shrath Hari N]{Sudev A C, Shrath Hari N}
+\author[Sudev A C, Shrath Hari N]{Sudev A C, Sharath Hari N}
 \institute[NITC]{
   Department of Computer Science\\
   National Institute of Technology Calicut\\[1ex]
@@ -80,8 +80,12 @@ Why use immediate files ? \linebreak
 \begin{itemize}
 \item Reduces the number of disk access.
 \item Very less internal fragmentation.
-\item A study shows that average file size in unix is about 1KB(Mullender and Tanenbaum 1984).
-\item The concept been used in NTFS to accomodate smaller files in its MFT(Master file table) itself.
+\item A study shows that average file size in unix is about 1KB  \begin{tiny}
+ { \em Mullender and Tanenbaum 1984}.
+\end{tiny}
+\item The concept been used in NTFS to accomodate smaller files in its MFT(Master file table) itself \begin{tiny}
+ { \em Operating Systems Design and Implementation, Third Edition. Page - 508 }.
+\end{tiny}
 \end{itemize}
 
 %\begin{large}
@@ -143,7 +147,7 @@ Add an additional option flag in { \em i\_mode } which is element of i\_node str
 \end{frame}
 %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-\begin{frame}{Operations on the immediate file}
+\begin{frame}{Operations on immediate file}
 \begin{itemize}
 \item Create \linebreak
 Create a immediate file only when the flag bit for immediate file is set. This flag must be passed to creat/open system call.\linebreak
@@ -153,7 +157,7 @@ Instead of reading the data from the disk block the read system call should be m
 \end{frame}
 
 
-\begin{frame}{Operations on the immediate file}
+\begin{frame}{Operations on immediate file}
 \begin{itemize}
 \item Write \linebreak
 The write system call should be modified to write data into the inode itself and should report an error whenever the file size goes beyond 32 Bytes.\linebreak
