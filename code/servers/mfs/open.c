@@ -6,7 +6,7 @@
 #include "inode.h"
 #include "super.h"
 #include <minix/vfsif.h>
-#include <stdio.h>
+
 
 static struct inode *new_node(struct inode *ldirp, char *string, mode_t
 	bits, zone_t z0);
@@ -51,7 +51,7 @@ int fs_create()
 	  put_inode(rip);
 	  return(r);
   }
-  printf("inode number %d",rip->i_num);
+  
   /* Reply message */
   fs_m_out.RES_INODE_NR = rip->i_num;
   fs_m_out.RES_MODE = rip->i_mode;
