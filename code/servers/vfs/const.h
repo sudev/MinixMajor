@@ -12,6 +12,7 @@
 
 /* Miscellaneous constants */
 #define SU_UID 	 ((uid_t) 0)	/* super_user's uid_t */
+/* what's the meaning of this ((uid_t) 0) ? */
 #define SYS_UID  ((uid_t) 0)	/* uid_t for system processes and INIT */
 #define SYS_GID  ((gid_t) 0)	/* gid_t for system processes and INIT */
 
