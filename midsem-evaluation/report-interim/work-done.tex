@@ -10,7 +10,7 @@ Implementing a system call requires a proper understanding of both VFS and MFS.
 \subsection{Motive}
 Creation of Immediate files / Regular files according to the flag passed in Open system call.
 \subsection{Approach}
-Adding an additional I\_Immediate mask to i\_mode in const.h file.\\	
+Adding an additional Oflag to open() system call namely O\_ CREATI  with value 00110 \\	
 Writing a C program to test the working of the system call.\\
 Rebuilding the entire system.
 \subsection{Result}
