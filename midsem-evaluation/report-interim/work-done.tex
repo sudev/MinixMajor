@@ -1,21 +1,20 @@
 \chapter{Work Done}
 
-\section{Setting up Minix 3 development environment}
-Installation of Minix 3 was done using Virtualbox({\em Virtualization software}) in Linux based host machine.\\
+\section{Understanding Minix File system System Structure}
+
+The Minix Filesystem architecture has Virtual File system (VFS) and Minix File System (MFS). Where the VFS is an abstraction layer over the file system implementations in the operating system. It handles all system calls related to the file system and allows for client applications to access different types of file systems in a uniform way. It also provides a common interface to several kinds of file system implementations. \\
+Implementing a system call requires a proper understanding of both VFS and MFS.
+
 %Please refer to Appendix I for detailed steps.
-\section{Modification of Kernel}
+\section{Introduction of Immediate flag to Open system call}
 \subsection{Motive}
-A small project was done to familiarise with the Minix 3 operating system code base.
-\subsection{Problem Statement}
-Print out the name of every file that is being executed by the OS.
+Creation of Immediate files / Regular files according to the flag passed in Open system call.
 \subsection{Approach}
-Locate the kernel source file that implements the exec system call.\\	
-Insert a printf statement appropriately in the located file.\\
-Rebuild the entire system.
-\subsection{Solution}
-The implementation of the exec system call was found in file do\_exec.c under /usr/src/kernel/system/ of the minix source tree.\\
-The name of the process that is being executed is captured using the variable { \em name} and is printed out.\\
-The system is rebuilt using the command {\em make clean} and { \em make build} inside /usr/src/ folder. 
+Adding an additional I\_Immediate mask to i\_mode in const.h file.\\	
+Writing a C program to test the working of the system call.\\
+Rebuilding the entire system.
+\subsection{Result}
+We were successful in making a change in open file system call and verified it using a C program.
 
 
 
