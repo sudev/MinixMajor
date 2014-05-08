@@ -13,8 +13,8 @@ INtro
 Detailed intro
 * Minix VFS
 	* Need, How, What, Why.
-*mfs and how it communicates with vfs.
-*different vfs objects
+* mfs and how it communicates with vfs.
+* different vfs objects
 
 Tricks of the trade
 * installation tricks
@@ -24,21 +24,21 @@ Tricks of the trade
 * others, (if any)
 
 What we have done
-*tried to implement Immediate files.
-*changes made 
-*progress
-*future work
+* tried to implement Immediate files.
+* changes made 
+* progress
+* future work
 
 Difficulties faced
-*Installation
-	*networking
-*version confusion
-*lack of proper documentation and support for newbies
-*diff versions of C used
-*file system issues
+* Installation
+	* networking
+* version confusion
+* lack of proper documentation and support for newbies
+* diff versions of C used
+* file system issues
 
 Critical analysis(conclusion)
-* 
+
 
 
 
