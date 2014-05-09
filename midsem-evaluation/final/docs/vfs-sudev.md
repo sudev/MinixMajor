@@ -1,4 +1,16 @@
 ##Introduction to Design of VFS in Minix Operating System. 
+* * * 
+Exploiting modularity is a key idea behind MINIX, therefore the design of the Virtual File system layer is also driven by this idea. In contrast to the monolithic
+kernels, where the VFS layer access the implementation of the underlying file systems through function pointers, in MINIX the drivers are different processes
+and they communicate through IPC. During the design of the MINIX Virtual File system the most important decisions that had to be made were the followings:
+- Which components are responsible for which functionalities.
+- Which resources are handled by the VFS and which are handled by the actual file system implementations.
+- Where to divide the former FS process in order to get an abstract virtual layer and the actual MINIX file system implementation.
+
+
+Comparing the MINIX VFS to the VFS layer in other – monolithic – UNIX kernels some functionalities have to be handled in a different way. In monolithic
+kernels the communication between the VFS layer and the underlying file system implementation is cheap, simple function calls, while sending messages between
+processes is more expensive. For this reason, keeping the number of messages low during a system call is important.
 
 The MINIX Virtual File system is built in a distributed, multiserver, manner. It consists of a top-level VFS process and separate FS process for each mounted partition.    
 ![Vfs Fs layers](./img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
@@ -6,13 +18,15 @@ The MINIX Virtual File system is built in a distributed, multiserver, manner. It
 
 The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted by [Figure].
 
+* * * 
+
 ##Major steps in execution of system call 
 
 Let's consider system call **stat()** with an argument **/usr/web/index.html**. 
 
 Assume 
 
-*  a ext2 partition mounted at /usr
+* a ext2 partition mounted at /usr
 * root filesystem is Minix filesystem
 
 ###Steps
@@ -52,10 +66,11 @@ interaction is involved with the Driver process. The FS copies back to the user 
 12. The VFS receives the response message from the FS process and sends the return value back to the POSIX library. The function reports success back to the user process.   
 
 ![Vfs message calls](./img/vfsflow.png "Messages changed and data copied during the stat() system call.")
-##Comparison to VFS of monolithic kernels
 
-Monolithic kernels are finely tuned and optimized to be efficient. Performance is one of the key issue. In contrast, the MINIX design is about reliability and se-
-curity. An immediate consequence of these is that the MINIX VFS has a different structure, it has different properties. Some of these differences are given in this
+
+##Comparison
+
+Monolithic kernels are finely tuned and optimized to be efficient. Performance is one of the key issue. In contrast, the MINIX design is about reliability and security. An immediate consequence of these is that the MINIX VFS has a different structure, it has different properties. Some of these differences are given in this
 section.     
 
 As we mentioned before, kernel data structures can be easily accessed in monolithic kernels and the communication between components are simple function calls. This implies that the border between the virtual layer and the actual file system implementations is not at the same place where it is in the MINIX VFS. Monolithic kernels keep as much functionality in the VFS layer as they can.    
@@ -63,5 +78,5 @@ As we mentioned before, kernel data structures can be easily accessed in monolit
 Communication is free between the VFS and the underlying file system drivers therefore it makes sense to keep the virtual layer as abstract as it is possible and
 to reduce the functionality of the actual file system implementations. This make the implementations of a new file system easier.     
 
-
+* * * 
 
