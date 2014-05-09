@@ -1,15 +1,10 @@
 ##Introduction to Design of VFS in Minix Operating System. 
 
 The MINIX Virtual File system is built in a distributed, multiserver, manner. It consists of a top-level VFS process and separate FS process for each mounted partition.    
-
-Picture Page 24  2.1 
+![Vfs Fs layers](/img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
 
 
 The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted by [Figure].
-
-	[Own]
-	The top level VFS is the virtualization layer here which will requests from the process and routes the request to specific filesystem server. 
-	[/Own]
 
 ##Major steps in execution of system call 
 
@@ -56,6 +51,17 @@ interaction is involved with the Driver process. The FS copies back to the user 
 
 12. The VFS receives the response message from the FS process and sends the return value back to the POSIX library. The function reports success back to the user process.   
 
+![Vfs message calls](/img/vfsflow.png "Messages changed and data copied during the stat() system call.")
+##Comparison to VFS of monolithic kernels
+
+Monolithic kernels are finely tuned and optimized to be efficient. Performance is one of the key issue. In contrast, the MINIX design is about reliability and se-
+curity. An immediate consequence of these is that the MINIX VFS has a different structure, it has different properties. Some of these differences are given in this
+section.     
+
+As we mentioned before, kernel data structures can be easily accessed in monolithic kernels and the communication between components are simple function calls. This implies that the border between the virtual layer and the actual file system implementations is not at the same place where it is in the MINIX VFS. Monolithic kernels keep as much functionality in the VFS layer as they can.    
+
+Communication is free between the VFS and the underlying file system drivers therefore it makes sense to keep the virtual layer as abstract as it is possible and
+to reduce the functionality of the actual file system implementations. This make the implementations of a new file system easier.     
 
 
 
