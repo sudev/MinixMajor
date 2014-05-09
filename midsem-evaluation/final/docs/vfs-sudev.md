@@ -1,28 +1,24 @@
 ##Introduction to Design of VFS in Minix Operating System. 
-* * * 
+
 Exploiting modularity is a key idea behind MINIX, therefore the design of the Virtual File system layer is also driven by this idea. In contrast to the monolithic
 kernels, where the VFS layer access the implementation of the underlying file systems through function pointers, in MINIX the drivers are different processes
-and they communicate through IPC. During the design of the MINIX Virtual File system the most important decisions that had to be made were the followings:
+and they communicate through IPC. During the design of the MINIX Virtual File system the most important decisions that had to be made were the followings:      
 - Which components are responsible for which functionalities.
 - Which resources are handled by the VFS and which are handled by the actual file system implementations.
-- Where to divide the former FS process in order to get an abstract virtual layer and the actual MINIX file system implementation.
+- Where to divide the former FS process in order to get an abstract virtual layer and the actual MINIX file system implementation.      
 
-
-Comparing the MINIX VFS to the VFS layer in other – monolithic – UNIX kernels some functionalities have to be handled in a different way. In monolithic
-kernels the communication between the VFS layer and the underlying file system implementation is cheap, simple function calls, while sending messages between
-processes is more expensive. For this reason, keeping the number of messages low during a system call is important.
+Comparing the MINIX VFS to the VFS layer in other – monolithic – UNIX kernels some functionalities have to be handled in a different way. In monolithic kernels the communication between the VFS layer and the underlying file system implementation is cheap, simple function calls, while sending messages between processes is more expensive. For this reason, keeping the number of messages low during a system call is important.
 
 The MINIX Virtual File system is built in a distributed, multiserver, manner. It consists of a top-level VFS process and separate FS process for each mounted partition.    
 ![Vfs Fs layers](./img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
 
 
-The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted by [Figure].
+The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted in figure above. In other words all the file system calls will have to go through the virtualiztion layer first then the VFS will route it to specific file system server.
 
-* * * 
 
 ##Major steps in execution of system call 
 
-Let's consider system call **stat()** with an argument **/usr/web/index.html**. 
+Let's consider system call **stat()** with an argument **/usr/web/index.html**. This is help you in understanding VFS and its workflow.
 
 Assume 
 
@@ -77,6 +73,10 @@ As we mentioned before, kernel data structures can be easily accessed in monolit
 
 Communication is free between the VFS and the underlying file system drivers therefore it makes sense to keep the virtual layer as abstract as it is possible and
 to reduce the functionality of the actual file system implementations. This make the implementations of a new file system easier.     
+
+##Conclusion 
+
+Implementation of VFS in Minix helps in creation of Virtualization layer between the kernel and other file system servers. Now implementation of any new filesystem in Minix is much easier as we don't have to deal with any other interface other than VFS and FS interface.
 
 * * * 
 
