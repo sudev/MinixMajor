@@ -1,7 +1,7 @@
 ##Introduction to Design of VFS in Minix Operating System. 
 
 The MINIX Virtual File system is built in a distributed, multiserver, manner. It consists of a top-level VFS process and separate FS process for each mounted partition.    
-![Vfs Fs layers](/img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
+![Vfs Fs layers](./img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
 
 
 The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted by [Figure].
@@ -51,7 +51,7 @@ interaction is involved with the Driver process. The FS copies back to the user 
 
 12. The VFS receives the response message from the FS process and sends the return value back to the POSIX library. The function reports success back to the user process.   
 
-![Vfs message calls](/img/vfsflow.png "Messages changed and data copied during the stat() system call.")
+![Vfs message calls](./img/vfsflow.png "Messages changed and data copied during the stat() system call.")
 ##Comparison to VFS of monolithic kernels
 
 Monolithic kernels are finely tuned and optimized to be efficient. Performance is one of the key issue. In contrast, the MINIX design is about reliability and se-
