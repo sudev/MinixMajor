@@ -6,15 +6,15 @@ The Minix Filesystem architecture has Virtual File system (VFS) and Minix File S
 Implementing a system call requires a proper understanding of both VFS and MFS.
 
 %Please refer to Appendix I for detailed steps.
-\section{Introduction of Immediate flag to Open system call}
+\section{Introduction of O\_CREATI flag to Open system call}
 \subsection{Motive}
-Creation of Immediate files / Regular files according to the flag passed in Open system call.
+Creation of Immediate files / Regular files according to the flag passed in Open system call. By defaut it uses the O\_CREAT flag which creates a regular file, we added a O\_CREATI flag to create a immediate file.
 \subsection{Approach}
-Adding an additional Oflag to open() system call namely O\_ CREATI  with value 00110 \\	
+Adding an additional Oflag to open() system call namely O\_ CREATI  with value 00110 in the file fcntl.h. \\	
 Writing a C program to test the working of the system call.\\
 Rebuilding the entire system.
 \subsection{Result}
 We were successful in making a change in open file system call and verified it using a C program.
 
-
-
+\section{Addition of I\_IMMEDIATE in I\_MODE flag bits }
+An additional I\_IMMEDIATE flag bit was added to I\_MODE flag bits along with default I\_REGULAR flag in the file const.h. These flag bits are saved inside the Inode. These flags are helpful in distinguishing the files at later stages. 
