@@ -4,7 +4,8 @@ Different kinds of people use computers now than sev­eral decades ago, but oper
 It goes like this:   
 * You buy the device.   
 * You turn it on.   
-* It works perfectly for the next 10 years.     
+* It works perfectly for the next 10 years.   
+     
 Most electronic devices fit this model well, the one exception being the personal computer. In addition to mind-numbing complexity (e.g., even networking experts have trouble configuring a wireless base station, despite the 500-page manual), they are prone to crashes and blue screens of death, issues unheard of with other electronic devices.     
 
 Most modern computer users want their systems to work all the time and never crash, ever. In engineering terms, this requires a mean time to failure (MTTF) appre­ciably longer than the expected lifetime of the computer.The average user virtually never complains that the com­puter itself is too slow (e.g., it cannot update a spread­sheet fast enough), although complaints about the speed of the Web are common. Over time, the relationship be­tween speed and reliability has reversed. Most users now consider the reliability of the computer to be far more im­portant than its speed, the reverse of 40 years ago.     
