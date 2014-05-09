@@ -15,6 +15,8 @@ Yet operating system reliability is still poor. To make the research challenge m
 
 Studies have shown that software contains about 6-16 bugs per 1000 lines of code, it is simply infeasible to get all code to be correct. Therefore, the MINIX OS was designed in such a way that certain major faults are properly isolated, defects are detected, and failing components can be replaced on the fly, often transparent to applications and without user intervention or loss of data or work.   
 
+### MINIX 3 and its architecture  
+
 MINIX 3 is a microkernel based POSIX compliant operating system designed to be highly reliable, flexible, and secure. The approach is based on the ideas of modularity and fault isolation by breaking the system into many self-contained modules. In general the MINIX design is guided by the following principles:
 
 * Simplicity: Keep the system as simple as possible so that it is easy to understand and thus more likely to be correct.  
