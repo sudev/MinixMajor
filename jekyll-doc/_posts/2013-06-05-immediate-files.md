@@ -20,15 +20,19 @@ To make storage more efficient for small files, and to reduce internal fragmenta
 
 In the above picture the colored portions indicate the space used to save disk block pointers in inode structure. Our job is to utilize this space and implement immediate files.
 
+[Immediate files was proposed by Andrew S. Tanenbaum and Spaje J. Mullender in 1984.][imf]
 ###Problem Definition 
 
-*   First, you need to define an additional flag (e.g. for an i_mode member variable of an inode) that marks your file and inode as immediate. 
-*   An Immediate file is created **only** when you pass an open flag O_CREATI *(you will have to  define this open flag constant)*.
+*   Implement support for immediate files in Minix Filesystem.
+*   An Immediate file is created **only** when we pass an open flag O_CREATI *(you will have to  define this open flag constant)*.
     * by default we use open system calls to create a regular file:   
-      *open("filename", O_CREAT , 0666);*    
+      *open("filename", O_CREAT , 0666);*
     * now for creating immediate file we will define a new constant O_CREATI and open system call with parameter O_CREATI should create an immediate file:    
       *open("filename", O_CREATI, 0666);*
-    
 *   All other file operations *(open, delete, read, write ...)* should work on immediate files.
+*   When size of immediate file reaches 32 Bytes the filesystem should return an error. 
+
 * * * 
+
+[imf]: <http://dare2.ubvu.vu.nl/bitstream/handle/1871/2604/11033.pdf>  "Immediate files paper"
 
