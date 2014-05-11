@@ -7,7 +7,7 @@ order: 7
 ---
 
 # Selecting the version
-A lot of confusion preceded on which version of MINIX to work on. It would have been much easier to implement immediate files in MINIX 3.1(book version) with only MFS, but we were unable to setup the networking environment for it. Also, our primary aim was to understand the VFS of MINIX. Owing to the above reasons, we had to look for other versions of MINIX. We were able to install MINIX 3.2.1 properly and work on it. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.
+A lot of confusion preceded on which version of MINIX to work on. It would have been much easier to implement immediate files in MINIX 3.1(book version)which does not have VFS, but we were unable to setup the networking environment for it. Also, our primary aim was to understand the VFS of MINIX. Owing to the above reasons, we had to look for other versions of MINIX. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.
 
 # Installation and Networking
 
@@ -17,10 +17,9 @@ A lot of confusion preceded on which version of MINIX to work on. It would have 
 
 # Documentation Issues   
 
-Working with the existing code was a tedious one. There was no proper documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. [Balazs Gerofi's Master's Thesis](http://www.minix3.org/theses/gerofi-minix-vfs.pdf) was really helpful in understanding the VFS of MINIX. 
+Working with the existing code was a tedious one. There was no proper documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. The publication [Balazs Gerofi's Master's Thesis](http://www.minix3.org/theses/gerofi-minix-vfs.pdf) provided a proper idea of the VFS implementation and the VFS/FS interface. A documentation other than this giving proper details of the VFS/FS interface was hard to find.
 
-# Code Issues  
-The top-level VFS process receives the requests from user programs through system calls. Processes in MINIX communicate through IPC, while the monolithic kernels do via function calls. In order to retrieve the information from the messages, we need to know the structure and the sender of the messages. It was difficult to trace the origin of the message received by the VFS. To make things more complicated, there are around 10 message structures. Shown below are the different message structures.
+
 
 
 
