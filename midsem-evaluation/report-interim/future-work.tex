@@ -1,8 +1,0 @@
-\chapter{Work Remaining}
-
-\section{Implementation of a procedure to handle immediate files for read, open, creat system}
-\begin{itemize}
-\item Creation of immediate files when CREAT\_I flag is passed in open system call. Updating I\_Immediate I\_mode flag bits during the creation of an Immediate file. 
-\item Checking for immediate file during read, link, open system calls using the I\_Immediate flag bit and manipulating data according to Immediate file (not allocating disk block, reading from inode itself ).
-
-\end{itemize}
