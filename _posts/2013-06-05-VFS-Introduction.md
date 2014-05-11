@@ -28,7 +28,7 @@ and they communicate through IPC. During the design of the MINIX Virtual File sy
 Comparing the MINIX VFS to the VFS layer in other monolithic UNIX kernels some functionalities have to be handled in a different way. In monolithic kernels the communication between the VFS layer and the underlying file system implementation is cheap, simple function calls, while sending messages between processes is more expensive. For this reason, keeping the number of messages low during a system call is important.
 
 The MINIX Virtual File system is built in a distributed, multiserver, manner. It consists of a top-level VFS process and separate FS process for each mounted partition.    
-![Vfs Fs layers](/img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
+![Vfs Fs layers](../../img/vfsfs.png "The two layers of the MINIX Virtual File system. The VFS is above the actual file system implementations according to the dependencies.")
 
 
 The top-level VFS process receives the requests from user programs through system calls. If actual file system operation is involved the VFS requests the corresponding FS process to do the job. This dependency is depicted in figure above. In other words all the file system calls will have to go through the virtualiztion layer first then the VFS will route it to specific file system server.
@@ -79,7 +79,7 @@ interaction is involved with the Driver process. The FS copies back to the user 
 
 12. The VFS receives the response message from the FS process and sends the return value back to the POSIX library. The function reports success back to the user process.   
 
-![Vfs message calls](/img/vfsflow.png "Messages changed and data copied during the stat() system call.")
+![Vfs message calls](../../img/vfsflow.png "Messages changed and data copied during the stat() system call.")
 
 
 ##Comparison
