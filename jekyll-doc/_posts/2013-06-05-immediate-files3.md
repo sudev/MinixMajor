@@ -94,6 +94,16 @@ int do_open()
 }
 {% endhighlight %}
 
-Variable `open_mode` 
+`do_open()` receives either two or three arguments *(only during creation of a new file)* . Variable `open_mode` indicate the open flags which is an argument to open system call. `Line 20` checks if `open_mode` contains `O_CREAT` flag, if it's true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer [this](../ref/message.html).
+
+{% highlight C %}
+
+  if ((open_mode & O_CREAT) | (open_mode & O_CREATI) ) {
+	vname = (vir_bytes) job_m_in.name1;
+	vname_length = (size_t) job_m_in.name1_length;
+	r = fetch_name(vname, vname_length, fullpath);
+  }
+{% endhighlight %}
+ 
 
 
