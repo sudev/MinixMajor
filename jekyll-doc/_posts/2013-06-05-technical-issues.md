@@ -15,7 +15,6 @@ One of the important questions was which version of MINIX to work on. It would h
 * We found that Qemu completely crashes reporting an error after a few steps of the Minix installation proccess. An error was filed on this behalf [Qemu crashes while installing MINIX 3](https://bbs.archlinux.org/viewtopic.php?id=172296).
 * The installation went fine in Virtual Box, but the setting up part was a bit tricky. We had to install Openssh server for the networking between the host OS and the virtual machine. We were unsuccessful due to the restrictions in the college firewall for FTP packets. Upon request, a port was opened and FTP packets were allowed for our IPs and all the required packages were installed.
 
+# Documentation Issues   
 
-
-
-
+Understanding the existing code was a tedious one. There was no proper documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. [Balazs Gerofi's Master's Thesis](http://www.minix3.org/theses/gerofi-minix-vfs.pdf) was really helpful in understanding the VFS of MINIX.
