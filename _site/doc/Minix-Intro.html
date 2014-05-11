@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Experiments with Minix Operating System : Minix Introduction</title>
+        <meta name="description" content="Implementing Immediate files">
+
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <div class=row-fluid>
+                <div id=header class=span12>
+                    <h4><a class=brand href="/">Experiments with Minix Operating System</a>
+    <small>Implementing Immediate files</small>
+</h4>
+
+
+                </div>
+            </div>
+
+            <div class=row-fluid>
+                
+                
+                    <div id=navigation class=span2>
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Documentation</li>
+            
+            <li data-order="6"><a href="/doc/tips-tricks.html">Tricks of the trade <br />  </a></li>
+        
+            
+            <li data-order="7"><a href="/doc/technical-issues.html">Technical Issues <br />  </a></li>
+        
+            
+            <li data-order="5"><a href="/doc/immediate-files3.html">Immediate Files <br /> <small>Progress</small> </a></li>
+        
+            
+            <li data-order="4"><a href="/doc/immediate-files2.html">Immediate Files <br /> <small>Design</small> </a></li>
+        
+            
+            <li data-order="3"><a href="/doc/immediate-files.html">Immediate Files <br /> <small>Problem Statement</small> </a></li>
+        
+            
+            <li data-order="2"><a href="/doc/VFS-Introduction.html">VFS Introduction <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/doc/Minix-Intro.html">Minix Introduction <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Reference</li>
+            
+            <li data-order="2"><a href="/ref/resource.html">Resources <br />  </a></li>
+        
+            
+            <li data-order="3"><a href="/ref/message.html">Message Passing in MINIX <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/ref/install.html">Minix installation <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class=divider></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id=content class=span10>
+                        <div class=page-header>
+    <h2>Minix Introduction
+        
+    </h2>
+</div>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Instead fo reading this introduction it will be better if you watch <a href="https://www.youtube.com/watch?v=bx3KuE7UjGA">Andrew Tanenbaums talk on Minix 3 given at FOSDEM</a>.</p>
+
+<p>Different kinds of people use computers now than sev­eral decades ago, but operating systems have not fully kept pace with this change. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV re­pairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times.Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.<br>
+It goes like this:   </p>
+
+<ul>
+<li>You buy the device.<br></li>
+<li>You turn it on.<br></li>
+<li>It works perfectly for the next 10 years.<br></li>
+</ul>
+
+<p>Most electronic devices fit this model well, the one exception being the personal computer. In addition to mind-numbing complexity (e.g., even networking experts have trouble configuring a wireless base station, despite the 500-page manual), they are prone to crashes and blue screens of death, issues unheard of with other electronic devices.     </p>
+
+<p>Most modern computer users want their systems to work all the time and never crash, ever. In engineering terms, this requires a mean time to failure (MTTF) appre­ciably longer than the expected lifetime of the computer.The average user virtually never complains that the com­puter itself is too slow (e.g., it cannot update a spread­sheet fast enough), although complaints about the speed of the Web are common. Over time, the relationship be­tween speed and reliability has reversed. Most users now consider the reliability of the computer to be far more im­portant than its speed, the reverse of 40 years ago.     </p>
+
+<p>Yet operating system reliability is still poor. To make the research challenge more explicit, consider a device driver that contains a fatal bug such as a store through an invalid pointer or an infinite loop. In commodity op­erating systems, when this bug is triggered, it crashes or hangs the entire system because the buggy code is run­ning in kernel mode. All user programs that were run­ning at the time the bug struck are killed, all user work is lost, and all FTP, Web, and e-mail transfers are abruptly aborted.   </p>
+
+<p>Studies have shown that software contains about 6-16 bugs per 1000 lines of code, it is simply infeasible to get all code to be correct. Therefore, the MINIX OS was designed in such a way that certain major faults are properly isolated, defects are detected, and failing components can be replaced on the fly, often transparent to applications and without user intervention or loss of data or work.   </p>
+
+<h2 id="minix-3-and-its-architecture">MINIX 3 and its architecture</h2>
+
+<p>MINIX 3 is a microkernel based POSIX compliant operating system designed to be highly reliable, flexible, and secure. The approach is based on the ideas of modularity and fault isolation by breaking the system into many self-contained modules. In general the MINIX design is guided by the following principles:</p>
+
+<ul>
+<li><p>Simplicity: Keep the system as simple as possible so that it is easy to understand and thus more likely to be correct.  </p></li>
+<li><p>Modularity: Split the system into a collection of small, independent modules and therefore prevent failures in one module from indirectly affecting another module.  </p></li>
+<li><p>Least authorization: Reduce privileges of all modules as far as it is possible.  </p></li>
+<li><p>Fault tolerance: Design the system in a way that it withstands failures. Detect the faulty component and replace it, while the system continues running the entire time.  </p></li>
+</ul>
+
+<p>The operating system is structured as follows. A minimal kernel provides interrupt handlers, a mechanism for starting and stopping processes, a scheduler,
+and interprocess communication. Standard operating system functionality that is usually present in a monolithic kernel is moved to user space, and no longer
+runs at the highest privilege level. Device drivers, the file system, the network server and high-level memory management run as separate user processes that are encapsulated in their private address space.</p>
+
+<p><img src="/img/minixarch.png" alt="minix architecture"></p>
+
+<p>The above figure shows the structure of the operating system.  </p>
+
+<p>Although from the kernel’s point of view the server and driver processes are also just user-mode processes, logically they can be structured into three layers. The lowest level of user-mode processes are the device drivers, each one controlling some device. Drivers for IDE, floppy, and RAM disks, etc. Above the driver layer are the server processes. These include the VFS server, underlying file system implementations, process server, reincarnation server, and others. On top of the servers come the ordinary user processes including shells, compilers, utilities, and application programs.   </p>
+
+<p>Because the default mode of interprocess communication (IPC) are synchronous calls, deadlocks can occur when two or more processes simultaneously try to communicate and all processes are blocked waiting for one another. Therefore, a deadlock avoidance protocol has been carefully devised that prescribes a partial, top-down message ordering. The message ordering roughly follows the layering that is described above. Deadlock detection is also implemented in the kernel. If
+a process unexpectedly were to cause a deadlock, the offending is denied and an error message is returned to the caller.   </p>
+
+<p>Recovering from failures is an important reliability feature in MINIX. Servers and drivers are started and guarded by a system process called the reincarnation server. If a guarded process unexpectedly exits or crashes this is immediately detected – because the process server notifies the reincarnation server whenever a server or driver terminates – and the process is automatically restarted. Furthermore, the reincarnation server periodically polls all servers and drivers for their status. If one does not respond correctly within a specified time interval, the reincarnation server kills and restarts the misbehaving server or driver.</p>
+
+
+                    </div>
+                
+            </div>
+<!--
+            <div class=row-fluid>
+                <div id=footer class=span12>
+                    Documentation for <a href="https://github.com/bruth/jekyll-docs-template">Experiments with Minix Operating System</a>
+
+                </div>
+            </div>
+ -->       </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+    </body>
+</html>
