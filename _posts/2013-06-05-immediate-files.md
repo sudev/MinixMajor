@@ -15,7 +15,7 @@ To make storage more efficient for small files, and to reduce internal fragmenta
 
 #####Let's take a look at Inode structue of MFS(Minix Filesystem).
 
-![Indode Structure Minix Filesystem](../../img/inode.jpg "The colored portion indicates potential space for immediate files")
+![Indode Structure Minix Filesystem](../img/inode.jpg "The colored portion indicates potential space for immediate files")
 
 
 In the above picture the colored portions indicate the space used to save disk block pointers in inode structure. Our job is to utilize this space and implement immediate files.

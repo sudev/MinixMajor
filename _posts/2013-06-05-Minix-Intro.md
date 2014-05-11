@@ -40,7 +40,7 @@ The operating system is structured as follows. A minimal kernel provides interru
 and interprocess communication. Standard operating system functionality that is usually present in a monolithic kernel is moved to user space, and no longer
 runs at the highest privilege level. Device drivers, the file system, the network server and high-level memory management run as separate user processes that are encapsulated in their private address space.
 
-![minix architecture] (../../img/minixarch.png)
+![minix architecture] (../img/minixarch.png)
 
 The above figure shows the structure of the operating system.  
 
