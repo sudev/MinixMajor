@@ -19,13 +19,13 @@ Once we have installed Minix, there are a few things that we want to do to make 
 
 In order to establish a ssh connection between host machine and Minix 3 you will have to have a openssh server running in both host and Minix 3. Installing openssh server in Minix is a bit tricky especially when you are sitting behind a network with firewall restrictions on ftp. Please see reference section on [how to establish a ssh connection](../ref/install.html#enable-ssh-with-host-machine) for more details. Make use of scp/rsync/ssh to transfer files to and from host machine and Minix 3. 
 
-VirtualBox has a feature to [share a host folder with virtual machine](https://www.virtualbox.org/manual/ch04.html). Follow the Minix wiki for instructions on [how to setup a shared folder](http://wiki.minix3.org/UsersGuide/RunningOnVirtualBox#Shared_Folders).
+VirtualBox has a feature to [share a host folder with virtual machine](https://www.virtualbox.org/manual/ch04.html). Follow the Minix wiki for instructions on [how to setup a shared folder](http://wiki.minix3.org/UsersGuide/RunningOnVirtualBox#Shared_Folders). It's easier to develop on a shared folder in host system than editing source file inside virtual machine. 
 
 Once the network is active, it's recommended to install a few other applications to make our life easier. For example, we might want an editor (such as vim), openssh (to exchange files between Minix and the outside world), or a new shell (such as bash). Some of this might have been installed as part of your basic Minix package. Also, check out the source code of Minix that is located in `/usr/src` and get a feeling for which parts of the OS are located under which directories.
 
 [VirtualBox Snapshots](http://www.virtualbox.org/manual/ch01.html#snapshots) this feature was too usefull for us to version control during development. taking regular snapshots of virtual machine is adviced so that in case if Minix crashes during boot or you get some unexpected error you can always go to previous development stage.
 
-Using a good IDE will help you to track down all the variable and function definition with speed and ease. One way to do this is to use [Minix LXR](http://www.cise.ufl.edu/~cop4600/cgi-bin/lxr/http/blurb.html) and a text editor *(It's possible to track variable definitions in emacs and vim)*. Eclipse *(eclipse + eclipse cdt)* is very easy to understand IDE with feature to find function definitions by a mouse hover/click. 
+Using a good IDE will help you to track down all the variable and function definition with speed and ease. One way to do this is to use [Minix LXR](http://www.cise.ufl.edu/~cop4600/cgi-bin/lxr/http/blurb.html) and a text editor *(It's possible to track variable definitions in emacs and vim)*. Eclipse *(eclipse + eclipse cdt)* is very easy to understand IDE with feature to find function and variable definitions by a mouse hover/click. 
 
 Links:      
 [Rsync](http://ss64.com/bash/rsync.html)     
