@@ -5,6 +5,13 @@ category: doc
 date: 2013-06-05 12:00:00
 order: 2
 ---
+##Virtual File System
+Virtual File System is an abstraction layer – over the file system implementations – in the operating system. It provides a common interface for the applications so that they can access different types of underlying file systems in a uniform way and therefore the differences in their properties are hidden. This interface consist of the file system related system calls.
+
+The VFS also provides a common interface for the underlying file systems and manages resources that are independent from the underlying file systems. This
+common interface ensures that new file system implementations can be added easily.
+
+
 ##Introduction to Design of VFS in Minix Operating System. 
 
 Exploiting modularity is a key idea behind MINIX, therefore the design of the Virtual File system layer is also driven by this idea. In contrast to the monolithic

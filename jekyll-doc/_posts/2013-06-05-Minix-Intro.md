@@ -7,6 +7,8 @@ order: 1
 ---
 # Introduction
 
+Instead fo reading this introduction it will be better if you watch [Andrew Tanenbaums talk on Minix 3 given at FOSDEM](https://www.youtube.com/watch?v=bx3KuE7UjGA).
+
 Different kinds of people use computers now than sev­eral decades ago, but operating systems have not fully kept pace with this change. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV re­pairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times.Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.   
 It goes like this:   
 
