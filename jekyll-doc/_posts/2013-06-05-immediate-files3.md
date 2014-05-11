@@ -94,4 +94,6 @@ int do_open()
 }
 {% endhighlight %}
 
+Variable `open_mode` 
+
 
