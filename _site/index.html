@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Experiments with Minix Operating System : Minx Filesystem</title>
+        <meta name="description" content="Implementing Immediate files">
+
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <div class=row-fluid>
+                <div id=header class=span12>
+                    <h4><a class=brand href="/">Experiments with Minix Operating System</a>
+    <small>Implementing Immediate files</small>
+</h4>
+
+
+                </div>
+            </div>
+
+            <div class=row-fluid>
+                
+                
+                    <div id=navigation class=span2>
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Documentation</li>
+            
+            <li data-order="6"><a href="/doc/tips-tricks.html">Tricks of the trade <br />  </a></li>
+        
+            
+            <li data-order="7"><a href="/doc/technical-issues.html">Technical Issues <br />  </a></li>
+        
+            
+            <li data-order="5"><a href="/doc/immediate-files3.html">Immediate Files <br /> <small>Progress</small> </a></li>
+        
+            
+            <li data-order="4"><a href="/doc/immediate-files2.html">Immediate Files <br /> <small>Design</small> </a></li>
+        
+            
+            <li data-order="3"><a href="/doc/immediate-files.html">Immediate Files <br /> <small>Problem Statement</small> </a></li>
+        
+            
+            <li data-order="2"><a href="/doc/VFS-Introduction.html">VFS Introduction <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/doc/Minix-Intro.html">Minix Introduction <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Reference</li>
+            
+            <li data-order="2"><a href="/ref/resource.html">Resources <br />  </a></li>
+        
+            
+            <li data-order="3"><a href="/ref/message.html">Message Passing in MINIX <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/ref/install.html">Minix installation <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class=divider></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id=content class=span10>
+                        <h2 id="experiments-with-minix-operating-system">Experiments with Minix Operating System</h2>
+
+<p>This project aimed at familiarizing Kernel programming by adding new features to Minix 3 Operating system. Implementing support immediate files for Minix filesystem was attempted along with a proper understanding of new Virtual Filesystem of Minix Operating system.    </p>
+
+<p><strong>MINIX 3</strong> is a free, open-source, operating system designed to be highly reliable, flexible, and secure. It is based on a tiny microkernel running in kernel mode with the rest of the operating system running as a collection of isolated, protected, processes in user mode.</p>
+
+<p><strong>Virtual File System</strong> is an abstraction layer – over the file system implementations – in the operating system.</p>
+
+<p><strong>Immediate Files</strong> are basically storage for small files where the data is stored directly in the inode, without the need to traverse pointers to external blocks.</p>
+
+<hr>
+
+<p><strong>Submitted by</strong>      </p>
+
+<p>Sharath Hari N     </p>
+
+<p><a href="http://sudev.github.io">Sudev A C</a>    </p>
+
+                    </div>
+                
+            </div>
+<!--
+            <div class=row-fluid>
+                <div id=footer class=span12>
+                    Documentation for <a href="https://github.com/bruth/jekyll-docs-template">Experiments with Minix Operating System</a>
+
+                </div>
+            </div>
+ -->       </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+    </body>
+</html>
