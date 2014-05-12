@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Experiments with Minix Operating System : Immediate Files</title>
+        <meta name="description" content="Implementing Immediate files">
+
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <div class=row-fluid>
+                <div id=header class=span12>
+                    <h4><a class=brand href="/">Experiments with Minix Operating System</a>
+    <small>Implementing Immediate files</small>
+</h4>
+
+
+                </div>
+            </div>
+
+            <div class=row-fluid>
+                
+                
+                    <div id=navigation class=span2>
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Documentation</li>
+            
+            <li data-order="6"><a href="/doc/tips-tricks.html">Tricks of the trade <br />  </a></li>
+        
+            
+            <li data-order="7"><a href="/doc/technical-issues.html">Technical Issues <br />  </a></li>
+        
+            
+            <li data-order="5"><a href="/doc/immediate-files3.html">Immediate Files <br /> <small>Progress</small> </a></li>
+        
+            
+            <li data-order="4"><a href="/doc/immediate-files2.html">Immediate Files <br /> <small>Design</small> </a></li>
+        
+            
+            <li data-order="3"><a href="/doc/immediate-files.html">Immediate Files <br /> <small>Problem Statement</small> </a></li>
+        
+            
+            <li data-order="2"><a href="/doc/VFS-Introduction.html">VFS Introduction <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/doc/Minix-Intro.html">Minix Introduction <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+            
+                <li class=nav-header>Reference</li>
+            
+            <li data-order="2"><a href="/ref/resource.html">Resources <br />  </a></li>
+        
+            
+            <li data-order="3"><a href="/ref/message.html">Message Passing in MINIX <br />  </a></li>
+        
+            
+            <li data-order="1"><a href="/ref/install.html">Minix installation <br />  </a></li>
+        
+    
+        
+        
+
+        
+    
+        
+        
+
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class=divider></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id=content class=span10>
+                        <div class=page-header>
+    <h2>Immediate Files
+        <small>Progress</small>
+    </h2>
+</div>
+
+<h3 id="creating-a-i_immediate-flag-bit-for-i_mode">Creating a I_IMMEDIATE flag bit for i_mode</h3>
+
+<p>In order to distinguish between immediate file and regular file/inode in MFS we need to define a new variable <code>I_IMMEDIATE</code> in i_mode. Flags bits defined for i_mode are as shown below. It is defined inside the file <code>/src/include/minix/const.h</code>.</p>
+
+<div class="highlight"><pre><code class="c"><span class="cm">/* Flag bits for i_mode in the inode. */</span>
+<span class="cp">#define I_TYPE          0170000    </span><span class="cm">/* this field gives inode type */</span><span class="cp"></span>
+<span class="cp">#define I_UNIX_SOCKET  0140000 </span><span class="cm">/* unix domain socket */</span><span class="cp"></span>
+<span class="cp">#define I_SYMBOLIC_LINK 0120000    </span><span class="cm">/* file is a symbolic link */</span><span class="cp"></span>
+<span class="cp">#define I_REGULAR       0100000    </span><span class="cm">/* regular file, not dir or special */</span><span class="cp"></span>
+<span class="cp">#define I_BLOCK_SPECIAL 0060000    </span><span class="cm">/* block special file */</span><span class="cp"></span>
+<span class="cp">#define I_DIRECTORY     0040000    </span><span class="cm">/* file is a directory */</span><span class="cp"></span>
+<span class="cp">#define I_CHAR_SPECIAL  0020000    </span><span class="cm">/* character special file */</span><span class="cp"></span>
+<span class="cp">#define I_NAMED_PIPE    0010000    </span><span class="cm">/* named pipe (FIFO) */</span><span class="cp"></span>
+<span class="cp">#define I_SET_UID_BIT   0004000    </span><span class="cm">/* set effective uid_t on exec */</span><span class="cp"></span>
+<span class="cp">#define I_SET_GID_BIT   0002000    </span><span class="cm">/* set effective gid_t on exec */</span><span class="cp"></span>
+<span class="cp">#define I_SET_STCKY_BIT 0001000    </span><span class="cm">/* sticky bit */</span><span class="cp"> </span>
+<span class="cp">#define ALL_MODES       0007777    </span><span class="cm">/* all bits for user, group and others */</span><span class="cp"></span>
+<span class="cp">#define RWX_MODES       0000777    </span><span class="cm">/* mode bits for RWX only */</span><span class="cp"></span>
+<span class="cp">#define R_BIT           0000004    </span><span class="cm">/* Rwx protection bit */</span><span class="cp"></span>
+<span class="cp">#define W_BIT           0000002    </span><span class="cm">/* rWx protection bit */</span><span class="cp"></span>
+<span class="cp">#define X_BIT           0000001    </span><span class="cm">/* rwX protection bit */</span><span class="cp"></span>
+<span class="cp">#define I_NOT_ALLOC     0000000    </span><span class="cm">/* this inode is free */</span><span class="cp"></span></code></pre></div>
+
+<p>Now we add a line <code>#define I_IMMEDIATE    0110000</code> to define the new variable <code>I_IMMEDIATE</code>. When we create a new immediate file we will set <code>I_IMMEDIATE</code> instead of <code>I_REGULAR</code> for i_mode bits of inode and hence we distinguish regular and immediate files.</p>
+
+<h3 id="creating-o_creati-open-flag">Creating O_CREATI open flag</h3>
+
+<p>Open flags for POSIX system calls are defined inside the file <code>src/sys/sys/fcntl.h</code>. Shown below are some of the open flags defined in the file, we will have to add a new O_CREATI flag here such that it won&#39;t interfere with other flag bits.</p>
+
+<div class="highlight"><pre><code class="c"><span class="cm">/* Oflag values for open().  POSIX Table 6-4. */</span>
+<span class="cp">#define O_CREAT        00100   </span><span class="cm">/* creat file if it doesn&#39;t exist */</span><span class="cp"></span>
+<span class="cp">#define O_EXCL         00200   </span><span class="cm">/* exclusive use flag */</span><span class="cp"></span>
+<span class="cp">#define O_NOCTTY       00400   </span><span class="cm">/* do not assign a controlling terminal */</span><span class="cp"></span>
+<span class="cp">#define O_TRUNC        01000   </span><span class="cm">/* truncate flag */</span><span class="cp"></span></code></pre></div>
+
+<h3 id="creating-an-immediate-file">Creating an immediate file</h3>
+
+<p>A file can be created using either open or creat system call. File <code>/src/servers/vfs/open.c</code> of VFS handles the open and creat system call.</p>
+
+<p>Function <code>do_open()</code> inside open.c handles the open system call.</p>
+
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="c"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*===========================================================================*</span>
+<span class="cm"> *             do_open                      *</span>
+<span class="cm"> *===========================================================================*/</span>
+<span class="kt">int</span> <span class="nf">do_open</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="cm">/* Perform the open(name, flags,...) system call.</span>
+<span class="cm"> * syscall might provide &#39;name&#39; embedded in message when not creating file */</span>
+
+  <span class="kt">int</span> <span class="n">create_mode</span><span class="p">;</span>        <span class="cm">/* is really mode_t but this gives problems */</span>
+  <span class="kt">int</span> <span class="n">open_mode</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>       <span class="cm">/* is really mode_t but this gives problems */</span>
+  <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">OK</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="n">fullpath</span><span class="p">[</span><span class="n">PATH_MAX</span><span class="p">];</span>
+  <span class="n">vir_bytes</span> <span class="n">vname</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">vname_length</span><span class="p">;</span>
+
+  <span class="n">open_mode</span> <span class="o">=</span> <span class="p">(</span><span class="kt">mode_t</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">mode</span><span class="p">;</span>
+  <span class="n">create_mode</span> <span class="o">=</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">c_mode</span><span class="p">;</span>
+
+  <span class="cm">/* If O_CREAT is set, open has three parameters, otherwise two. */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">open_mode</span> <span class="o">&amp;</span> <span class="n">O_CREAT</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vname</span> <span class="o">=</span> <span class="p">(</span><span class="n">vir_bytes</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1</span><span class="p">;</span>
+    <span class="n">vname_length</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1_length</span><span class="p">;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">fetch_name</span><span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="n">vname_length</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">vname</span> <span class="o">=</span> <span class="p">(</span><span class="n">vir_bytes</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+    <span class="n">vname_length</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name_length</span><span class="p">;</span>
+    <span class="n">create_mode</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">copy_name</span><span class="p">(</span><span class="n">vname_length</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">)</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* Direct copy failed, try fetching from user space */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fetch_name</span><span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="n">vname_length</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">)</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">err_code</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="n">err_code</span><span class="p">);</span> <span class="cm">/* name was bad */</span>
+  <span class="k">return</span> <span class="n">common_open</span><span class="p">(</span><span class="n">fullpath</span><span class="p">,</span> <span class="n">open_mode</span><span class="p">,</span> <span class="n">create_mode</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table>
+
+<p><code>do_open()</code> receives either two or three arguments <em>(only during creation of a new file)</em> . Variable <code>open_mode</code> indicate the open flags which is an argument to open system call. <code>Line 20</code> checks if <code>open_mode</code> contains <code>O_CREAT</code> flag, if it&#39;s true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer <a href="../ref/message.html">this</a>.</p>
+
+<div class="highlight"><pre><code class="c"><span class="k">if</span> <span class="p">((</span><span class="n">open_mode</span> <span class="o">&amp;</span> <span class="n">O_CREAT</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">open_mode</span> <span class="o">&amp;</span> <span class="n">O_CREATI</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">vname</span> <span class="o">=</span> <span class="p">(</span><span class="n">vir_bytes</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1</span><span class="p">;</span>
+    <span class="n">vname_length</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1_length</span><span class="p">;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">fetch_name</span><span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="n">vname_length</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">);</span>
+  <span class="p">}</span></code></pre></div>
+
+
+                    </div>
+                
+            </div>
+<!--
+            <div class=row-fluid>
+                <div id=footer class=span12>
+                    Documentation for <a href="https://github.com/bruth/jekyll-docs-template">Experiments with Minix Operating System</a>
+
+                </div>
+            </div>
+ -->       </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+    </body>
+</html>
