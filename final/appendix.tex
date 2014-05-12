@@ -1,0 +1,39 @@
+\chapter{Appendix}
+
+\section{Message Passing in MINIX}
+
+\subsection{Message Passing Properties}
+
+\begin{itemize}
+
+\item Minix uses the concept of a message to support communication between processes. This is used universally througout Minix whenever one process needs to access another.
+
+\item    Minix user processes can only send/receive messages to system processes, not to other user processes.
+
+\item    Minix system processes can send messages to other system processes and reply to user process messages subject to certain restrictions.
+
+\item    The following message passing functions are implemented by the kernel:
+	\begin{itemize}
+	  \item   send
+      \item   receive
+      \item   sendrec (send/receive)
+      \item   notify
+      \item   echo
+	\end{itemize}
+       
+
+\item The first three use the rendezvous style message passing. So sendrec in a user process will block the user if the destination system process is currently doing something other than trying to receive an new request message.
+
+\item The \_syscall function used by user level programs actually uses the sendrec (send/receive) function to send a request and receive a reply.
+
+\item  The notify type message does not use the rendezvous. That is, it does not get blocked if the destination is not yet ready to receive the notification.
+
+\item The echo is used by the kernel process for passing a message from a process to itself.
+
+\end{itemize}
+
+\subsection{Message Format}
+
+A message consists of: the process ID of the sending process, an identifier telling the process what sort of message it is, and then a union for holding the actual message structure. The code snippet from the file  \emph{/usr/src/include/minix/ipc.h} shows the message structure :
+
+\lstinputlisting{./codeblocks/messagestructure}
