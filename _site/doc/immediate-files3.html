@@ -8,7 +8,7 @@
         <title>Experiments with Minix Operating System : Immediate Files</title>
         <meta name="description" content="Implementing Immediate files">
 
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link href="/css/bootmin.css" rel="stylesheet">
         <link rel="stylesheet" href="/css/syntax.css">
         <link rel="stylesheet" href="/css/main.css">
     </head>
@@ -224,13 +224,75 @@
 </pre></div>
 </td></tr></table>
 
-<p><code>do_open()</code> receives either two or three arguments <em>(only during creation of a new file)</em> . Variable <code>open_mode</code> indicate the open flags which is an argument to open system call. <code>Line 20</code> checks if <code>open_mode</code> contains <code>O_CREAT</code> flag, if it&#39;s true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer <a href="../ref/message.html">this</a>.</p>
+<p><code>do_open()</code> receives either two or three arguments <em>(only during creation of a new file)</em> . Variable <code>open_mode</code> indicates the open flags which is an argument to open system call. <code>Line 20</code> checks if <code>open_mode</code> contains <code>O_CREAT</code> flag, if it&#39;s true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer <a href="../ref/message.html">this</a>.</p>
 
 <div class="highlight"><pre><code class="c"><span class="k">if</span> <span class="p">((</span><span class="n">open_mode</span> <span class="o">&amp;</span> <span class="n">O_CREAT</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">open_mode</span> <span class="o">&amp;</span> <span class="n">O_CREATI</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
     <span class="n">vname</span> <span class="o">=</span> <span class="p">(</span><span class="n">vir_bytes</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1</span><span class="p">;</span>
     <span class="n">vname_length</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">job_m_in</span><span class="p">.</span><span class="n">name1_length</span><span class="p">;</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">fetch_name</span><span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="n">vname_length</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">);</span>
   <span class="p">}</span></code></pre></div>
+
+<p>A function <code>common_open()</code> is a common interface for both the open and creat system call. Open system call calls the <code>common_open()</code>  after finding absolute path,  open_mode and create mode <em>(in case of new file creation)</em>.</p>
+
+<div class="highlight"><pre><code class="c"><span class="cm">/* If O_CREATE is set, try to make the file. */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">oflags</span> <span class="o">&amp;</span> <span class="n">O_CREAT</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omode</span> <span class="o">=</span> <span class="n">I_REGULAR</span> <span class="o">|</span> <span class="p">(</span><span class="n">omode</span> <span class="o">&amp;</span> <span class="n">ALLPERMS</span> <span class="o">&amp;</span> <span class="n">fp</span><span class="o">-&gt;</span><span class="n">fp_umask</span><span class="p">);</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="n">new_node</span><span class="p">(</span><span class="o">&amp;</span><span class="n">resolve</span><span class="p">,</span> <span class="n">oflags</span><span class="p">,</span> <span class="n">omode</span><span class="p">);</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">err_code</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="n">OK</span><span class="p">)</span> <span class="n">exist</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>   <span class="cm">/* We just created the file */</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">EEXIST</span><span class="p">)</span> <span class="p">{</span>     <span class="cm">/* other error */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="n">unlock_vnode</span><span class="p">(</span><span class="n">vp</span><span class="p">);</span>
+        <span class="n">unlock_filp</span><span class="p">(</span><span class="n">filp</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="n">exist</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">oflags</span> <span class="o">&amp;</span> <span class="n">O_EXCL</span><span class="p">);</span><span class="cm">/* file exists, if the O_EXCL</span>
+<span class="cm">                      flag is set this is an error */</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="cm">/* Scan path name */</span>
+    <span class="n">resolve</span><span class="p">.</span><span class="n">l_vmnt_lock</span> <span class="o">=</span> <span class="n">VMNT_READ</span><span class="p">;</span>
+    <span class="n">resolve</span><span class="p">.</span><span class="n">l_vnode_lock</span> <span class="o">=</span> <span class="n">VNODE_OPCL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">vp</span> <span class="o">=</span> <span class="n">eat_path</span><span class="p">(</span><span class="o">&amp;</span><span class="n">resolve</span><span class="p">,</span> <span class="n">fp</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">unlock_filp</span><span class="p">(</span><span class="n">filp</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">err_code</span><span class="p">);</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>Above given code block checks if <code>O_CREAT</code> flag was set and creates a new file in that situation. Now we will change this code block to support immediate files.</p>
+
+<div class="highlight"><pre><code class="c"><span class="cm">/* If O_CREATE is set, try to make the file. */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">oflags</span> <span class="o">&amp;</span> <span class="n">O_CREAT</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omode</span> <span class="o">=</span> <span class="n">I_REGULAR</span> <span class="o">|</span> <span class="p">(</span><span class="n">omode</span> <span class="o">&amp;</span> <span class="n">ALLPERMS</span> <span class="o">&amp;</span> <span class="n">fp</span><span class="o">-&gt;</span><span class="n">fp_umask</span><span class="p">);</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="n">new_node</span><span class="p">(</span><span class="o">&amp;</span><span class="n">resolve</span><span class="p">,</span> <span class="n">oflags</span><span class="p">,</span> <span class="n">omode</span><span class="p">);</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">err_code</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="n">OK</span><span class="p">)</span> <span class="n">exist</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>   <span class="cm">/* We just created the file */</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">EEXIST</span><span class="p">)</span> <span class="p">{</span>     <span class="cm">/* other error */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="n">unlock_vnode</span><span class="p">(</span><span class="n">vp</span><span class="p">);</span>
+        <span class="n">unlock_filp</span><span class="p">(</span><span class="n">filp</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="n">exist</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">oflags</span> <span class="o">&amp;</span> <span class="n">O_EXCL</span><span class="p">);</span><span class="cm">/* file exists, if the O_EXCL flag is set this is an error */</span>
+  <span class="p">}</span> 
+  <span class="cm">/* if O_CREATI flag is set, create an immediate file instead */</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">oflags</span> <span class="o">&amp;</span> <span class="n">O_CREATI</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omode</span> <span class="o">=</span> <span class="n">I_IMMEDIATE</span> <span class="o">|</span> <span class="p">(</span><span class="n">omode</span> <span class="o">&amp;</span> <span class="n">ALLPERMS</span> <span class="o">&amp;</span> <span class="n">fp</span><span class="o">-&gt;</span><span class="n">fp_umask</span><span class="p">);</span> 
+        <span class="cm">/* Omode is calculate by ORing I_IMMEDIATE and (omode - mask) */</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="n">new_node</span><span class="p">(</span><span class="o">&amp;</span><span class="n">resolve</span><span class="p">,</span> <span class="n">oflags</span><span class="p">,</span> <span class="n">omode</span><span class="p">);</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">err_code</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="n">OK</span><span class="p">)</span> <span class="n">exist</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>   <span class="cm">/* We just created the file */</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">EEXIST</span><span class="p">)</span> <span class="p">{</span>     <span class="cm">/* other error */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="n">unlock_vnode</span><span class="p">(</span><span class="n">vp</span><span class="p">);</span>
+        <span class="n">unlock_filp</span><span class="p">(</span><span class="n">filp</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+      <span class="cm">/* Scan path name */</span>
+    <span class="n">resolve</span><span class="p">.</span><span class="n">l_vmnt_lock</span> <span class="o">=</span> <span class="n">VMNT_READ</span><span class="p">;</span>
+    <span class="n">resolve</span><span class="p">.</span><span class="n">l_vnode_lock</span> <span class="o">=</span> <span class="n">VNODE_OPCL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">vp</span> <span class="o">=</span> <span class="n">eat_path</span><span class="p">(</span><span class="o">&amp;</span><span class="n">resolve</span><span class="p">,</span> <span class="n">fp</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">unlock_filp</span><span class="p">(</span><span class="n">filp</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">err_code</span><span class="p">);</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>We have to given the flag <code>I_IMMEDIATE</code> instead of <code>I_REGULAR</code> to omode so that we can differentiate regular and immediate file using these flag bits of <code>i_mode</code>. The function <code>new_node()</code> creates new vnode for the file. <em>(vnode is virtual abstraction of inode in VFS)</em></p>
 
 
                     </div>

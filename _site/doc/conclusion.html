@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <title>Experiments with Minix Operating System : Immediate Files</title>
+        <title>Experiments with Minix Operating System : Conclusion</title>
         <meta name="description" content="Implementing Immediate files">
 
         <link href="/css/bootmin.css" rel="stylesheet">
@@ -102,19 +102,14 @@
 
                     <div id=content class=span10>
                         <div class=page-header>
-    <h2>Immediate Files
-        <small>Design</small>
+    <h2>Conclusion
+        
     </h2>
 </div>
 
-<p>Implementing immediate file involves several key steps. First, we need to define an additional flag (e.g. for an i_mode member variable of an inode) that marks our file and inode as immediate.  Then we need to think about the different file operations that are affected by immediate files, and modify them to support these files.  If we think a bit, we should come up with a number of operations, including (but not limited to) creating, deleting, reading and writing a file.  Specifically, here are some requirements:   </p>
+<p>A critical study of the MINIX 3 Virtual File System was done and the results of the study are summarized here. The MINIX Virtual File system is built in a distributed, multiserver manner, which is a substantially different architecture compared to other UNIX-like solutions. An abstract layer has been designed and implemented, which is in charge of controlling the overall mechanism of the VFS by issuing accurate requests for the appropriate FS servers during the system calls.It is also in charge of maintaining abstract data structures that are independent from the underlying file system drivers and are playing important roles within the Virtual File system’s functionality. In order to achieve this, several data structures and functions operating on them had to be designed and added to the former FS server. The communication with underlying file system drivers also had to be implemented. The MFS implementation had to be separated from the original code and some part of it was rewritten to cooperate with the Virtual Layer. The communication according to the VFS/FS interface also had to be implemented.  </p>
 
-<ul>
-<li><p>Whenever we create a new file using &quot;open&quot; system call with O_CREATI flag, this new file should be marked as immediate in its inode.</p></li>
-<li><p>Whenever we delete or unlink an immediate file, we have to make sure that the code does not try to free data blocks for them, since there are none. We have to make sure that we do NOT follow the block pointers in the inode, since those are not used and generally invalid.</p></li>
-<li><p>Similarly, when we read from an immediate file, just retrieve the data from the inode itself.</p></li>
-<li><p>Check out files from the current file system to see how current operations are performed, and where the code needs to be changed.  Make sure to check to see which functions are already implemented, and reuse existing functions whenever possible.</p></li>
-</ul>
+<p>Second part of the project was implementing support for immediate files in MINIX 3 File System. A proper design for its implementation was framed and documented in the previous chapters. Although the implementation was not complete, the process was helpful in understanding the VFS better.</p>
 
 
                     </div>

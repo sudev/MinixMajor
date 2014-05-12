@@ -94,7 +94,7 @@ int do_open()
 }
 {% endhighlight %}
 
-`do_open()` receives either two or three arguments *(only during creation of a new file)* . Variable `open_mode` indicate the open flags which is an argument to open system call. `Line 20` checks if `open_mode` contains `O_CREAT` flag, if it's true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer [this](../ref/message.html).
+`do_open()` receives either two or three arguments *(only during creation of a new file)* . Variable `open_mode` indicates the open flags which is an argument to open system call. `Line 20` checks if `open_mode` contains `O_CREAT` flag, if it's true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer [this](../ref/message.html).
 
 {% highlight C %}
 
@@ -105,7 +105,7 @@ int do_open()
   }
 {% endhighlight %}
  
-A function `common_open()` is a common interface for both the open and creat system call. Open system call calls the `common_open()`  after finding absolute path open_mode and create mode *(in case of new file creation)*.
+A function `common_open()` is a common interface for both the open and creat system call. Open system call calls the `common_open()`  after finding absolute path,  open_mode and create mode *(in case of new file creation)*.
 
 {% highlight C  %}
   /* If O_CREATE is set, try to make the file. */
@@ -131,7 +131,7 @@ A function `common_open()` is a common interface for both the open and creat sys
     }
 {% endhighlight %}
 
-Above given code block checks if O_CREAT flag was set and creates a new file in that situation. Now we will change this code block to support immediate files.
+Above given code block checks if `O_CREAT` flag was set and creates a new file in that situation. Now we will change this code block to support immediate files.
 
 {% highlight C %}
 
@@ -170,5 +170,5 @@ Above given code block checks if O_CREAT flag was set and creates a new file in 
     }
 {% endhighlight %}
 
-We have to given the flag `I_REGULAR` with `I_IMMEDIATE` to omode so that we can differentiate regular and immediate file using these flag bits of `i_mode`. So all the immediate files created will have I_IMMEDIATE in their `i_mode`. The function `new_node()` creates new vnode for the file. *(vnode is virtual abstraction of inode in VFS)*
+We have to given the flag `I_IMMEDIATE` instead of `I_REGULAR` to omode so that we can differentiate regular and immediate file using these flag bits of `i_mode`. The function `new_node()` creates new vnode for the file. *(vnode is virtual abstraction of inode in VFS)*
 
