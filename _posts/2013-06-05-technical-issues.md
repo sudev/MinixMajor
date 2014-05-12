@@ -17,7 +17,7 @@ A lot of confusion preceded on which version of MINIX to work on. It would have 
 
 # Documentation Issues   
 
-Working with the existing code was a tedious one. There was no proper documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. The publication [Balazs Gerofi's Master's Thesis](http://www.minix3.org/theses/gerofi-minix-vfs.pdf) provided a proper idea of the VFS implementation and the VFS/FS interface. A documentation other than this giving proper details of the VFS/FS interface was hard to find.
+Working with the existing code is tedious when code is not documented properly. There was little documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. The publication [Balazs Gerofi's Master's Thesis](http://www.minix3.org/theses/gerofi-minix-vfs.pdf) is only documentation in regard to VFS implementation and the VFS/FS interface.
 
 
 

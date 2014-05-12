@@ -127,7 +127,7 @@
 
 <h1 id="message-format">Message Format</h1>
 
-<p>A message consists of: the process ID of the opposing process (the receiving process if the process is sending a message), an identifier telling the process what sort of message it is, and then a union for holding arguments. There is a union here to allow for a variety of sets of parameters. The code snippet below shows the message structure :</p>
+<p>A message consists of: the process ID of the sending process, an identifier telling the process what sort of message it is, and then a union for holding the actual message structure. The code snippet from the file <code>/usr/src/include/minix/ipc.h</code> shows the message structure :</p>
 
 <div class="highlight"><pre><code class="c"><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="kt">endpoint_t</span> <span class="n">m_source</span><span class="p">;</span>        <span class="cm">/* who sent the message */</span>
@@ -146,6 +146,23 @@
   <span class="p">}</span> <span class="n">m_u</span><span class="p">;</span>
 <span class="p">}</span> <span class="n">message</span> <span class="n">__aligned</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span></code></pre></div>
 
+<p>MINIX 3 has 10 message types (mess_1 to mess_10)  as we can see from the message structure above. Each of these message types are unique. The code below from the same file shows the different message types :</p>
+
+<div class="highlight"><pre><code class="c"><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m1i1</span><span class="p">,</span> <span class="n">m1i2</span><span class="p">,</span> <span class="n">m1i3</span><span class="p">;</span> <span class="kt">char</span> <span class="o">*</span><span class="n">m1p1</span><span class="p">,</span> <span class="o">*</span><span class="n">m1p2</span><span class="p">,</span> <span class="o">*</span><span class="n">m1p3</span><span class="p">;}</span> <span class="n">mess_1</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m2i1</span><span class="p">,</span> <span class="n">m2i2</span><span class="p">,</span> <span class="n">m2i3</span><span class="p">;</span> <span class="kt">long</span> <span class="n">m2l1</span><span class="p">,</span> <span class="n">m2l2</span><span class="p">;</span> <span class="kt">char</span> <span class="o">*</span><span class="n">m2p1</span><span class="p">;</span> 
+        <span class="kt">short</span> <span class="n">m2s1</span><span class="p">;}</span> <span class="n">mess_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m3i1</span><span class="p">,</span> <span class="n">m3i2</span><span class="p">;</span> <span class="kt">char</span> <span class="o">*</span><span class="n">m3p1</span><span class="p">;</span> <span class="kt">char</span> <span class="n">m3ca1</span><span class="p">[</span><span class="n">M3_LONG_STRING</span><span class="p">];}</span> <span class="n">mess_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">long</span> <span class="n">m4l1</span><span class="p">,</span> <span class="n">m4l2</span><span class="p">,</span> <span class="n">m4l3</span><span class="p">,</span> <span class="n">m4l4</span><span class="p">,</span> <span class="n">m4l5</span><span class="p">;}</span> <span class="n">mess_4</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">short</span> <span class="n">m5s1</span><span class="p">,</span> <span class="n">m5s2</span><span class="p">;</span> <span class="kt">int</span> <span class="n">m5i1</span><span class="p">,</span> <span class="n">m5i2</span><span class="p">;</span> <span class="kt">long</span> <span class="n">m5l1</span><span class="p">,</span> <span class="n">m5l2</span><span class="p">,</span> <span class="n">m5l3</span><span class="p">;}</span><span class="n">mess_5</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">long</span> <span class="n">m6l1</span><span class="p">,</span> <span class="n">m6l2</span><span class="p">,</span> <span class="n">m6l3</span><span class="p">;</span> <span class="kt">short</span> <span class="n">m6s1</span><span class="p">,</span> <span class="n">m6s2</span><span class="p">,</span> <span class="n">m6s3</span><span class="p">;</span> <span class="kt">char</span> <span class="n">m6c1</span><span class="p">,</span> <span class="n">m6c2</span><span class="p">;</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">m6p1</span><span class="p">,</span> <span class="o">*</span><span class="n">m6p2</span><span class="p">;}</span> <span class="n">mess_6</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m7i1</span><span class="p">,</span> <span class="n">m7i2</span><span class="p">,</span> <span class="n">m7i3</span><span class="p">,</span> <span class="n">m7i4</span><span class="p">,</span> <span class="n">m7i5</span><span class="p">;</span> <span class="kt">char</span> <span class="o">*</span><span class="n">m7p1</span><span class="p">,</span> <span class="o">*</span><span class="n">m7p2</span><span class="p">;}</span> <span class="n">mess_7</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m8i1</span><span class="p">,</span> <span class="n">m8i2</span><span class="p">;</span> <span class="kt">char</span> <span class="o">*</span><span class="n">m8p1</span><span class="p">,</span> <span class="o">*</span><span class="n">m8p2</span><span class="p">,</span> <span class="o">*</span><span class="n">m8p3</span><span class="p">,</span> <span class="o">*</span><span class="n">m8p4</span><span class="p">;}</span> <span class="n">mess_8</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">long</span> <span class="n">m9l1</span><span class="p">,</span> <span class="n">m9l2</span><span class="p">,</span> <span class="n">m9l3</span><span class="p">,</span> <span class="n">m9l4</span><span class="p">,</span> <span class="n">m9l5</span><span class="p">;</span>
+    <span class="kt">short</span> <span class="n">m9s1</span><span class="p">,</span> <span class="n">m9s2</span><span class="p">,</span> <span class="n">m9s3</span><span class="p">,</span> <span class="n">m9s4</span><span class="p">;</span> <span class="p">}</span> <span class="n">mess_9</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span><span class="kt">int</span> <span class="n">m10i1</span><span class="p">,</span> <span class="n">m10i2</span><span class="p">,</span> <span class="n">m10i3</span><span class="p">,</span> <span class="n">m10i4</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="n">m10l1</span><span class="p">,</span> <span class="n">m10l2</span><span class="p">,</span> <span class="n">m10l3</span><span class="p">;</span> <span class="p">}</span> <span class="n">mess_10</span><span class="p">;</span></code></pre></div>
+
 
                     </div>
                 
@@ -153,7 +170,7 @@
 <!--
             <div class=row-fluid>
                 <div id=footer class=span12>
-                    Documentation for <a href="https://github.com/bruth/jekyll-docs-template">Experiments with Minix Operating System</a>
+                    Documentation for <a href="https://github.com/sudev/MinixMajor">Experiments with Minix Operating System</a>
 
                 </div>
             </div>

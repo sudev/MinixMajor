@@ -106,7 +106,7 @@
 
 <h1 id="selecting-the-version">Selecting the version</h1>
 
-<p>A lot of confusion preceded on which version of MINIX to work on. It would have been much easier to implement immediate files in MINIX 3.1(book version) with only MFS, but we were unable to setup the networking environment for it. Also, our primary aim was to understand the VFS of MINIX. Owing to the above reasons, we had to look for other versions of MINIX. We were able to install MINIX 3.2.1 properly and work on it. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.</p>
+<p>A lot of confusion preceded on which version of MINIX to work on. It would have been much easier to implement immediate files in MINIX 3.1(book version)which does not have VFS, but we were unable to setup the networking environment for it. Also, our primary aim was to understand the VFS of MINIX. Owing to the above reasons, we had to look for other versions of MINIX. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.</p>
 
 <h1 id="installation-and-networking">Installation and Networking</h1>
 
@@ -118,11 +118,7 @@
 
 <h1 id="documentation-issues">Documentation Issues</h1>
 
-<p>Working with the existing code was a tedious one. There was no proper documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. <a href="http://www.minix3.org/theses/gerofi-minix-vfs.pdf">Balazs Gerofi&#39;s Master&#39;s Thesis</a> was really helpful in understanding the VFS of MINIX. </p>
-
-<h1 id="code-issues">Code Issues</h1>
-
-<p>The top-level VFS process receives the requests from user programs through system calls. Processes in MINIX communicate through IPC, while the monolithic kernels do via function calls. In order to retrieve the information from the messages, we need to know the structure and the sender of the messages. It was difficult to trace the origin of the message received by the VFS. To make things more complicated, there are around 10 message structures. Shown below are the different message structures.</p>
+<p>Working with the existing code is tedious when code is not documented properly. There was little documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. The publication <a href="http://www.minix3.org/theses/gerofi-minix-vfs.pdf">Balazs Gerofi&#39;s Master&#39;s Thesis</a> is only documentation in regard to VFS implementation and the VFS/FS interface.</p>
 
 
                     </div>
@@ -131,7 +127,7 @@
 <!--
             <div class=row-fluid>
                 <div id=footer class=span12>
-                    Documentation for <a href="https://github.com/bruth/jekyll-docs-template">Experiments with Minix Operating System</a>
+                    Documentation for <a href="https://github.com/sudev/MinixMajor">Experiments with Minix Operating System</a>
 
                 </div>
             </div>
