@@ -105,5 +105,70 @@ int do_open()
   }
 {% endhighlight %}
  
+A function `common_open()` is a common interface for both the open and creat system call. Open system call calls the `common_open()`  after finding absolute path open_mode and create mode *(in case of new file creation)*.
 
+{% highlight C  %}
+  /* If O_CREATE is set, try to make the file. */
+  if (oflags & O_CREAT) {
+        omode = I_REGULAR | (omode & ALLPERMS & fp->fp_umask);
+    vp = new_node(&resolve, oflags, omode);
+    r = err_code;
+    if (r == OK) exist = FALSE;   /* We just created the file */
+    else if (r != EEXIST) {     /* other error */
+        if (vp) unlock_vnode(vp);
+        unlock_filp(filp);
+        return(r);
+    }
+    else exist = !(oflags & O_EXCL);/* file exists, if the O_EXCL
+                      flag is set this is an error */
+  } else {
+    /* Scan path name */
+    resolve.l_vmnt_lock = VMNT_READ;
+    resolve.l_vnode_lock = VNODE_OPCL;
+    if ((vp = eat_path(&resolve, fp)) == NULL) {
+        unlock_filp(filp);
+        return(err_code);
+    }
+{% endhighlight %}
+
+Above given code block checks if O_CREAT flag was set and creates a new file in that situation. Now we will change this code block to support immediate files.
+
+{% highlight C %}
+
+  /* If O_CREATE is set, try to make the file. */
+  if (oflags & O_CREAT) {
+        omode = I_REGULAR | (omode & ALLPERMS & fp->fp_umask);
+    vp = new_node(&resolve, oflags, omode);
+    r = err_code;
+    if (r == OK) exist = FALSE;   /* We just created the file */
+    else if (r != EEXIST) {     /* other error */
+        if (vp) unlock_vnode(vp);
+        unlock_filp(filp);
+        return(r);
+    	}
+    	else exist = !(oflags & O_EXCL);/* file exists, if the O_EXCL flag is set this is an error */
+  } 
+  /* if O_CREATI flag is set, create an immediate file instead */
+  else if (oflags & O_CREATI) {
+        omode = I_IMMEDIATE | (omode & ALLPERMS & fp->fp_umask); 
+        /* Omode is calculate by ORing I_IMMEDIATE and (omode - mask) */
+	vp = new_node(&resolve, oflags, omode);
+    r = err_code;
+    if (r == OK) exist = FALSE;   /* We just created the file */
+    else if (r != EEXIST) {     /* other error */
+        if (vp) unlock_vnode(vp);
+        unlock_filp(filp);
+        return(r);
+    }
+  else {
+      /* Scan path name */
+    resolve.l_vmnt_lock = VMNT_READ;
+    resolve.l_vnode_lock = VNODE_OPCL;
+    if ((vp = eat_path(&resolve, fp)) == NULL) {
+        unlock_filp(filp);
+        return(err_code);
+    }
+{% endhighlight %}
+
+We have to given the flag `I_REGULAR` with `I_IMMEDIATE` to omode so that we can differentiate regular and immediate file using these flag bits of `i_mode`. So all the immediate files created will have I_IMMEDIATE in their `i_mode`. The function `new_node()` creates new vnode for the file. *(vnode is virtual abstraction of inode in VFS)*
 
