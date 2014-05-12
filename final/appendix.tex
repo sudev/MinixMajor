@@ -37,3 +37,9 @@
 A message consists of: the process ID of the sending process, an identifier telling the process what sort of message it is, and then a union for holding the actual message structure. The code snippet from the file  \emph{/usr/src/include/minix/ipc.h} shows the message structure :
 
 \lstinputlisting{./codeblocks/messagestructure}
+
+
+MINIX 3 has 10 message types (mess\_1 to mess\_10) as we can see from the message structure above. Each of these message types are unique. The code below from the same file shows the different message types :
+
+\lstinputlisting{./codeblocks/messagetypes}
+
