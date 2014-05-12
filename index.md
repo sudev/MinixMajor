@@ -22,9 +22,11 @@ This project aimed at familiarizing Kernel programming by adding new features to
 
 **Submitted by**      
 
-Sharath Hari N     
+Sharath Hari N  B100229CS    
 
-[Sudev A C](http://sudev.github.io)    
+[Sudev A C](http://sudev.github.io) B100312CS
+
+*Under the guidance of* Dr. K Muralikrishnan
 
 
 
