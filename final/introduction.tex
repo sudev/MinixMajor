@@ -41,7 +41,8 @@ In order to demonstrate the overall mechanism of the MINIX Virtual File system, 
 Overall, an abstract layer has been designed and implemented, which is in charge of controlling the overall mechanism of the VFS by issuing accurate requests for the appropriate FS servers during the system calls.
 
 \chapter{Introduction}
-\section{Minix}
+
+\section{Minix \cite{vfs} }
 
 Different kinds of people use computers now than sev­eral decades ago, but operating systems have not fully kept pace with this change. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV re­pairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times.Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.
 It goes like this:
@@ -85,13 +86,13 @@ Because the default mode of interprocess communication (IPC) are synchronous cal
 
 Recovering from failures is an important reliability feature in MINIX. Servers and drivers are started and guarded by a system process called the reincarnation server. If a guarded process unexpectedly exits or crashes this is immediately detected – because the process server notifies the reincarnation server whenever a server or driver terminates – and the process is automatically restarted. Furthermore, the reincarnation server periodically polls all servers and drivers for their status. If one does not respond correctly within a specified time interval, the reincarnation server kills and restarts the misbehaving server or driver.
 
-\section{Virtual File System in MINIX 3}
-
+\section{Virtual File System in MINIX 3 \cite{vfs}}
 Virtual File System is an abstraction layer – over the file system implementations – in the operating system. It provides a common interface for the applications so that they can access different types of underlying file systems in a uniform way and therefore the differences in their properties are hidden. This interface consist of the file system related system calls.\\
 
 The VFS also provides a common interface for the underlying file systems and manages resources that are independent from the underlying file systems. This common interface ensures that new file system implementations can be added easily.
 
 \subsection{VFS Design }
+
 Exploiting modularity is a key idea behind MINIX, therefore the design of the Virtual File system layer is also driven by this idea. In contrast to the monolithic kernels, where the VFS layer access the implementation of the underlying file systems through function pointers, in MINIX the drivers are different processes and they communicate through IPC. During the design of the MINIX Virtual File system the most important decisions that had to be made were the followings:
 \begin{itemize}
 \item Which components are responsible for which functionalities.
@@ -167,3 +168,4 @@ Communication is free between the VFS and the underlying file system drivers the
 \subsection{Conclusion}
 
 Implementation of VFS in Minix helps in creation of Virtualization layer between the kernel and other file system servers. Now implementation of any new filesystem in Minix is much easier as we don't have to deal with any other interface other than VFS and FS interface.
+
