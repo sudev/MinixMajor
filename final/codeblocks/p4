@@ -1,0 +1,5 @@
+if ((open_mode & O_CREAT) | (open_mode & O_CREATI) ) {
+    vname = (vir_bytes) job_m_in.name1;
+    vname_length = (size_t) job_m_in.name1_length;
+    r = fetch_name(vname, vname_length, fullpath);
+  }

@@ -1,0 +1,37 @@
+/*=========================================*
+ *             do_open                      *
+ *=====================================*/
+int do_open()
+{
+/* Perform the open(name, flags,...) system call.
+ * syscall might provide 'name' embedded in message when not creating file */
+
+  int create_mode;        /* is really mode_t but this gives problems */
+  int open_mode = 0;       /* is really mode_t but this gives problems */
+  int r = OK;
+  char fullpath[PATH_MAX];
+  vir_bytes vname;
+  size_t vname_length;
+
+  open_mode = (mode_t) job_m_in.mode;
+  create_mode = job_m_in.c_mode;
+
+  /* If O_CREAT is set, open has three parameters, otherwise two. */
+  if (open_mode & O_CREAT) {
+    vname = (vir_bytes) job_m_in.name1;
+    vname_length = (size_t) job_m_in.name1_length;
+    r = fetch_name(vname, vname_length, fullpath);
+  } else {
+    vname = (vir_bytes) job_m_in.name;
+    vname_length = (size_t) job_m_in.name_length;
+    create_mode = 0;
+    if (copy_name(vname_length, fullpath) != OK) {
+        /* Direct copy failed, try fetching from user space */
+        if (fetch_name(vname, vname_length, fullpath) != OK)
+            r = err_code;
+    }
+  }
+
+  if (r != OK) return(err_code); /* name was bad */
+  return common_open(fullpath, open_mode, create_mode);
+
