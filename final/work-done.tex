@@ -15,7 +15,64 @@ Implementing immediate file involves several key steps. First, we need to define
 \item Check out files from the current file system to see how current operations are performed, and where the code needs to be changed. Make sure to check to see which functions are already implemented, and reuse existing functions whenever possible.
 \end{itemize}
    
+\section{Progress}
+\subsection{Creating a I\_IMMEDIATE flag bit for i\_mode}
+In order to distinguish between immediate file and regular file/inode in MFS we need to define a new variable \texttt{I\_IMMEDIATE} in i\_mode. Flags bits defined for i\_mode are as shown below. It is defined inside the file \texttt{/src/include/minix/const.h}.
+//
+
+\begin{small}
+\lstinputlisting{./codeblocks/p1}
+\end{small}
+
+//
+
+Now we add a line \texttt{\#define I\_IMMEDIATE 0110000} to define the new variable \texttt{I\_IMMEDIATE}. When we create a new immediate file we will set \texttt{I\_IMMEDIATE} instead of \texttt{I\_REGULAR} for i\_mode bits of inode and hence we distinguish regular and immediate files
+
+\subsection{Creating O\_CREATI open flag}
+
+Open flags for POSIX system calls are defined inside the file \texttt{src/sys/sys/fcntl.h}. Shown below are some of the open flags defined in the file, we will have to add a new O\_CREATI flag here such that it won't interfere with other flag bits.
+//
+
+\begin{small}
+\lstinputlisting{./codeblocks/p2}
+\end{small}
+//
+
+\subsection{Creating an immediate file}
+A file can be created using either open or creat system call. File \texttt{/src/servers/vfs/open.c} of VFS handles the open and creat system call. \\
+
+Function \texttt{do\_open()} inside open.c handles the open system call.
+
+\begin{small}
+\lstinputlisting{./codeblocks/p3}
+\end{small}
+
+\texttt{do\_open()} receives either two or three arguments \emph{(only during creation of a new file)} . Variable \texttt{open\_mode} indicates the open flags which is an argument to open system call. \texttt{Line 20} checks if \texttt{open\_mode} contains \texttt{O\_CREAT} flag, if it's true we need to create a new file. Here we make a slight change to facilitate the creation of immediate file. Message structure is same for creation of both regular file and immediate file i.e. three arguments to open system call. For more information about Minix message structure refer message passing in appendix.
+ \\
+
+\begin{small}
+\lstinputlisting{./codeblocks/p4}
+\end{small}
 
 
 
+A function \texttt{common\_open()} is a common interface for both the open and creat system call. Open system call calls the \texttt{common\_open()} after finding absolute path, open\_mode and create mode \emph{(in case of new file creation)}.
 
+
+\begin{small}
+\lstinputlisting{./codeblocks/p5}
+\end{small}
+
+
+Above given code block checks if \texttt{O\_CREAT} flag was set and creates a new file in that situation. Now we will change this code block to support immediate files.
+
+
+\begin{small}
+\lstinputlisting{./codeblocks/p6}
+\end{small}
+
+
+We have to given the flag \texttt{I\_IMMEDIATE} instead of \texttt{I\_REGULAR} to omode so that we can differentiate regular and immediate file using these flag bits of \texttt{i\_mode}. The function \texttt{new\_node()} creates new vnode for the file. \emph{(vnode is virtual abstraction of inode in VFS)}
+
+\subsection{Conclusion}
+We were not able to find proper flag bit for O\_CREATI flag. In our opinion it would have been much easier to implement support for immediate file if we make a slight change in the problem statement. We can consider all newly created files as immediate files and instead of reporting an error when the file exceeds capacity of immediate file we can actually convert them to regular files at that particular point. 

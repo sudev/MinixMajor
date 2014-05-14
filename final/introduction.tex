@@ -1,6 +1,4 @@
-\chapter{Introduction}
-
-\section{Literature Review}
+\chapter{Literature Review}
 
 \vspace{10mm}
  Construction of a Highly Dependable Operating System, { \em Jorrit N. Herder, Herbert Bos, Ben Gras, Philip Homburg, and Andrew S. Tanenbaum - Vrije Universiteit, De Boelelaan 1081a, 1081 HV Amsterdam, The Netherlands
@@ -16,7 +14,7 @@ Immediate files, { \em  Sape. J. Mullender and Andrew S Tannenbaum - Software pr
 \\
 A efficient disk organization is proposed in this paper. The idea is store the first part of data inside the inode itself instead of storing the pointers there. As per the paper about 60.87 \% of the files in unix are lesser than 2048 bytes or less which means most of the files are short. Immediate blocks can be used to reduce the no of disk access considering most files being short.
 
-\pagebreak
+
 How To Manipulate the Inode Structure  { \em Karthick Jayaraman, Syracuse University } \cite{inode}
 \\ 
 \\
@@ -42,12 +40,8 @@ The various data structures used in the Virtual File System and the operations r
 In order to demonstrate the overall mechanism of the MINIX Virtual File system, the paper provides the main steps of the execution of a system call which gives a clear idea about the structure of the VFS.
 Overall, an abstract layer has been designed and implemented, which is in charge of controlling the overall mechanism of the VFS by issuing accurate requests for the appropriate FS servers during the system calls.
 
-
+\chapter{Introduction}
 \section{Minix}
-
-
-
-Instead fo reading this introduction it will be better if you watch Andrew Tanenbaums talk on Minix 3 given at FOSDEM.
 
 Different kinds of people use computers now than sev­eral decades ago, but operating systems have not fully kept pace with this change. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV re­pairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times.Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.
 It goes like this:
