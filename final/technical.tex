@@ -2,17 +2,17 @@
 
 \section{Selecting the version} 
 
-A lot of confusion preceded on which version of MINIX to work on. It would have been much easier to implement immediate files in MINIX 3.1(book version)which does not have VFS, but we were unable to setup the networking environment for it. Also, our primary aim was to understand the VFS of MINIX. Owing to the above reasons, we had to look for other versions of MINIX. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.
+A lot of confusion preceded on which version of MINIX to work on. If it was to implement immediate files, it will be much easier to implement immediate files in MINIX 3.1(book version) which does not have VFS. With the inclusion of VFS and more functionalities, the complexity of the code increased tremendously from 3.1 to 3.2.1. If the aim was only to implement immediate files , the advise would be to go with MINIX 3.1.
 
 \section{Installation and Networking}
 
 \begin{itemize}
-\item A considerable amount of time was spent on the installation and setting up of MINIX 3 in a Virtual Machine. The major issue was selecting the appropriate software to run it on(Qemu , Virtual Box, etc.). 
-\item We found that Qemu completely crashes reporting an error after a few steps of the Minix installation proccess. An error was filed on this behalf Qemu crashes while installing MINIX 3.
-\item The installation went fine in Virtual Box, but the setting up part was a bit tricky. We had to install Openssh server for the networking between the host OS and the virtual machine. We were unsuccessful due to the restrictions in the college firewall for FTP packets. Upon request, a port was opened and FTP packets were allowed for our IPs and all the required packages were installed.  
+\item A considerable amount of time was spent on the installation and setting up of MINIX 3 development environment 
+\item Qemu crashes during Minix installation proccess. A suspected bug was reported on Qemu crashes while installing MINIX 3 \cite{•}.
+\item The installation worked well in Virtual Box, but the setting up part was a bit tricky. Openssh server was installed for the networking between the host OS and the virtual machine. We were unsuccessful due to the restrictions in the college firewall for FTP packets. We will have to open FTP ports in order to download software packages from Minix software repositories.
 \end{itemize}
  
 
 \section{Documentation Issues}
 
-Working with the existing code is tedious when code is not documented properly. There was little documentation or support for newbies. We found it hard to get satisfying replies from the mailing list or the MINIX groups. The publication Balazs Gerofi's Master's Thesis is only documentation in regard to VFS implementation and the VFS/FS interface.
+Working with the existing code is tedious when code is not documented properly. There was little documentation or support for newbies. Satisfying replies from the mailing list or the MINIX groups was newer there for newbies. The  Balazs Gerofi's Master's Thesis is only documentation in regard to VFS implementation \cite{vfs}.
