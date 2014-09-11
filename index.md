@@ -2,12 +2,12 @@
 layout: default
 title: "Minx Filesystem"
 ---
-
 ##Experiments with Minix Operating System
 * * *
-This project is aimed at familiarizing Kernel programming by adding new features to Minix 3 Operating system. 
-* Implementing support for immediate files in Minix file system.
-* Understanding of Minix Virtual File System.
+This project is aimed at familiarizing Kernel programming by adding new features to Minix 3 Operating system.
+
+*    Implementing support for immediate files in Minix file system.
+*    Understanding of Minix Virtual File System.
 
 
 **MINIX 3** is a free, open-source, operating system designed to be highly reliable, flexible, and secure. It is based on a tiny microkernel running in kernel mode with the rest of the operating system running as a collection of isolated, protected, processes in user mode.
