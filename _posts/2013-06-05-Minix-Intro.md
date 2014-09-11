@@ -7,9 +7,9 @@ order: 1
 ---
 # Introduction
 
-Instead fo reading this introduction it will be better if you watch [Andrew Tanenbaums talk on Minix 3 given at FOSDEM](https://www.youtube.com/watch?v=bx3KuE7UjGA).
+We highly recommend you to watch this video [Andrew Tanenbaums talk on Minix 3 given at FOSDEM](https://www.youtube.com/watch?v=bx3KuE7UjGA).
 
-Different kinds of people use computers now than sev­eral decades ago, but operating systems have not fully kept pace with this change. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV re­pairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times.Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.   
+Different kinds of people use computers now than several decades ago, but operating systems have not fully kept pace with this change. It is true that we have point-and-click GUIs now instead of command line interfaces, but the expectation of the average user is different from what it used to be, because the user is different. Thirty or 40 years ago, when operating systems began to solidify into their current form, almost all computer users were programmers, scientists, engineers, or similar professionals doing heavy-duty computation, and they cared a great deal about speed. Few teenagers and even fewer grandmothers spent hours a day behind their terminal. Early users expected the computer to crash often; reboots came as naturally as waiting for the neighborhood TV repairman to come replace the picture tube on their home TVs. All that has changed and operating systems need to change with the times. Modern computer users are from a broad cross-section of society. Most of them have a set of mental expectations that we call The TV model.   
 It goes like this:   
 
 * You buy the device.   
@@ -28,13 +28,13 @@ Studies have shown that software contains about 6-16 bugs per 1000 lines of code
 
 MINIX 3 is a microkernel based POSIX compliant operating system designed to be highly reliable, flexible, and secure. The approach is based on the ideas of modularity and fault isolation by breaking the system into many self-contained modules. In general the MINIX design is guided by the following principles:
 
-* Simplicity: Keep the system as simple as possible so that it is easy to understand and thus more likely to be correct.  
+* *Simplicity*: Keep the system as simple as possible so that it is easy to understand and thus more likely to be correct.  
 
-* Modularity: Split the system into a collection of small, independent modules and therefore prevent failures in one module from indirectly affecting another module.  
+* *Modularity*: Split the system into a collection of small, independent modules and therefore prevent failures in one module from indirectly affecting another module.  
 
-* Least authorization: Reduce privileges of all modules as far as it is possible.  
+* *Least authorization*: Reduce privileges of all modules as far as it is possible.  
 
-* Fault tolerance: Design the system in a way that it withstands failures. Detect the faulty component and replace it, while the system continues running the entire time.  
+* *Fault tolerance*: Design the system in a way that it withstands failures. Detect the faulty component and replace it, while the system continues running the entire time.  
 
 The operating system is structured as follows. A minimal kernel provides interrupt handlers, a mechanism for starting and stopping processes, a scheduler,
 and interprocess communication. Standard operating system functionality that is usually present in a monolithic kernel is moved to user space, and no longer
